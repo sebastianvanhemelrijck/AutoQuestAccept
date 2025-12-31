@@ -34,6 +34,10 @@ Then enable the addon in the in-game AddOns list and use `/reload`.
 - /aq ui -> open the UI
 - Hold SHIFT while opening a quest to bypass auto-accept
 
+## Screenshot
+
+![AutoQuestAccept UI](docs/ui.png)
+
 ## Notes
 
 This addon intentionally targets the Vanilla 1.12.1 API. Classic or retail addons will not work.
