@@ -4,9 +4,27 @@ AutoQuestAccept is a simple Vanilla 1.12.1 addon that automatically accepts ques
 
 ## Installation
 
-Copy this folder to:
+### From GitHub (ZIP)
 
+1) Click Code -> Download ZIP on GitHub.
+2) Extract the ZIP.
+3) Rename the extracted folder from `AutoQuestAccept-main` (or similar) to `AutoQuestAccept`.
+4) Move it to your game folder:
+
+`Interface/AddOns/AutoQuestAccept/`
+
+### Verify Folder Structure
+
+Make sure it looks like this:
+
+```
 Interface/AddOns/AutoQuestAccept/
+  AutoQuestAccept.toc
+  AutoQuestAccept.lua
+  README.md
+```
+
+Then enable the addon in the in-game AddOns list and use `/reload`.
 
 ## Usage
 
