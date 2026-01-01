@@ -48,6 +48,16 @@ local function AQA_SetEnabled(value)
     AQA_PrintStatus()
 end
 
+local function AQA_AcceptAndClose()
+    AcceptQuest()
+    if CloseQuest then
+        CloseQuest()
+    end
+    if QuestFrame and QuestFrame:IsShown() and HideUIPanel then
+        HideUIPanel(QuestFrame)
+    end
+end
+
 local function AQA_ShowLinkPopup(title, url)
     if not AQA_LinkPopup then
         local pf = CreateFrame("Frame", "AQA_LinkPopup", UIParent)
@@ -165,7 +175,7 @@ function AQA_CreateUI()
     subtitle:SetPoint("TOPLEFT", f, "TOPLEFT", 16, -40)
     subtitle:SetWidth(340)
     subtitle:SetJustifyH("LEFT")
-    subtitle:SetText("Auto-accept quests on QUEST_DETAIL. Hold SHIFT to bypass.")
+    subtitle:SetText("Auto-accept quests on QUEST_DETAIL.")
 
     local check = CreateFrame("CheckButton", "AQA_EnableCheck", f, "UICheckButtonTemplate")
     check:SetPoint("TOPLEFT", f, "TOPLEFT", 24, -62)
@@ -226,14 +236,8 @@ frame:SetScript("OnEvent", function()
     end
 
     if event == "QUEST_DETAIL" then
-        if AQA_DB and AQA_DB.enabled and not IsShiftKeyDown() then
-            AcceptQuest()
-            if CloseQuest then
-                CloseQuest()
-            end
-            if QuestFrame and QuestFrame:IsShown() and HideUIPanel then
-                HideUIPanel(QuestFrame)
-            end
+        if AQA_DB and AQA_DB.enabled then
+            AQA_AcceptAndClose()
         end
     end
 end)

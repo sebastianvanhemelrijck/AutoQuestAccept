@@ -1,6 +1,6 @@
 # AutoQuestAccept
 
-AutoQuestAccept is a simple Vanilla 1.12.1 addon that automatically accepts quests when the quest detail window opens. Hold SHIFT to bypass auto-accept for a single quest.
+AutoQuestAccept is a simple Vanilla 1.12.1 addon that automatically accepts quests when the quest detail window opens.
 
 ## Installation
 
@@ -34,7 +34,6 @@ Then enable the addon in the in-game AddOns list and use `/reload`.
 - /aq ui -> open the UI
 - /aq feedback -> show the Issues link
 - /aq project -> show the Project link
-- Hold SHIFT while opening a quest to bypass auto-accept
 
 ## Screenshot
 
