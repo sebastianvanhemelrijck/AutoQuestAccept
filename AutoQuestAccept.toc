@@ -2,6 +2,6 @@
 ## Title: AutoQuestAccept
 ## Notes: Auto-accept quests when you open the quest detail window. Shift bypass. Toggle UI.
 ## Author: Sebastian
-## Version: 0.1.0
+## Version: 0.1.1
 ## SavedVariables: AQA_DB
 AutoQuestAccept.lua

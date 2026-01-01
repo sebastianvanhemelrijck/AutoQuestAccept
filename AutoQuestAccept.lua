@@ -1,7 +1,7 @@
 local addonName = "AutoQuestAccept"
-local addonVersion = "0.1.0"
-local donateUrl = "https://paypal.me/SVH24"
-local feedbackUrl = "https://github.com/sebastianvanhemelrijck"
+local addonVersion = "0.1.1"
+local repoUrl = "https://github.com/sebastianvanhemelrijck/AutoQuestAccept"
+local issuesUrl = "https://github.com/sebastianvanhemelrijck/AutoQuestAccept/issues"
 
 local function AQA_UpdateStatusUI()
     if AQA_EnableCheck and AQA_DB then
@@ -48,6 +48,75 @@ local function AQA_SetEnabled(value)
     AQA_PrintStatus()
 end
 
+local function AQA_ShowLinkPopup(title, url)
+    if not AQA_LinkPopup then
+        local pf = CreateFrame("Frame", "AQA_LinkPopup", UIParent)
+        pf:SetWidth(420)
+        pf:SetHeight(140)
+        pf:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+        pf:SetBackdrop({
+            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+            tile = true,
+            tileSize = 32,
+            edgeSize = 32,
+            insets = { left = 8, right = 8, top = 8, bottom = 8 }
+        })
+        pf:SetBackdropColor(0, 0, 0, 0.9)
+        pf:SetMovable(true)
+        pf:EnableMouse(true)
+        pf:RegisterForDrag("LeftButton")
+        pf:SetScript("OnDragStart", function()
+            pf:StartMoving()
+        end)
+        pf:SetScript("OnDragStop", function()
+            pf:StopMovingOrSizing()
+        end)
+        pf:SetClampedToScreen(true)
+        pf:Hide()
+
+        local titleText = pf:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        titleText:SetPoint("TOP", pf, "TOP", 0, -18)
+        titleText:SetText("Link")
+
+        local editBox = CreateFrame("EditBox", "AQA_LinkPopupEdit", pf, "InputBoxTemplate")
+        editBox:SetWidth(320)
+        editBox:SetHeight(20)
+        editBox:SetPoint("TOP", titleText, "BOTTOM", 0, -14)
+        editBox:SetAutoFocus(false)
+        editBox:SetJustifyH("CENTER")
+        editBox:SetScript("OnEditFocusGained", function()
+            editBox:HighlightText()
+        end)
+        editBox:SetScript("OnEnterPressed", function()
+            editBox:ClearFocus()
+        end)
+        editBox:SetScript("OnEscapePressed", function()
+            pf:Hide()
+        end)
+
+        local close = CreateFrame("Button", nil, pf, "UIPanelButtonTemplate")
+        close:SetWidth(80)
+        close:SetHeight(20)
+        close:SetPoint("BOTTOM", pf, "BOTTOM", 0, 16)
+        close:SetText("Close")
+        close:SetScript("OnClick", function()
+            pf:Hide()
+        end)
+
+        pf.titleText = titleText
+        pf.editBox = editBox
+        AQA_LinkPopup = pf
+        tinsert(UISpecialFrames, "AQA_LinkPopup")
+    end
+
+    AQA_LinkPopup.titleText:SetText(title)
+    AQA_LinkPopup.editBox:SetText(url)
+    AQA_LinkPopup:Show()
+    AQA_LinkPopup.editBox:HighlightText()
+    AQA_LinkPopup.editBox:SetFocus()
+end
+
 function AQA_CreateUI()
     if AQA_UI then
         return
@@ -61,7 +130,7 @@ function AQA_CreateUI()
 
     local f = CreateFrame("Frame", "AQA_UI", UIParent)
     f:SetWidth(420)
-    f:SetHeight(250)
+    f:SetHeight(220)
     f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     f:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
@@ -110,57 +179,26 @@ function AQA_CreateUI()
     statusText:SetPoint("TOPLEFT", check, "BOTTOMLEFT", 2, -6)
     AQA_StatusText = statusText
 
-    local donateButton = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-    donateButton:SetWidth(70)
-    donateButton:SetHeight(20)
-    donateButton:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 24, 50)
-    donateButton:SetText("Donate")
-
-    local donateBox = CreateFrame("EditBox", "AQA_DonateBox", f, "InputBoxTemplate")
-    donateBox:SetWidth(190)
-    donateBox:SetHeight(18)
-    donateBox:SetPoint("LEFT", donateButton, "RIGHT", 8, 0)
-    donateBox:SetAutoFocus(false)
-    donateBox:SetJustifyH("CENTER")
-    donateBox:SetText(donateUrl)
-    donateBox:SetScript("OnEditFocusGained", function()
-        donateBox:HighlightText()
-    end)
-    donateBox:SetScript("OnEnterPressed", function()
-        donateBox:ClearFocus()
-    end)
-    donateBox:SetScript("OnEscapePressed", function()
-        donateBox:ClearFocus()
-    end)
-
-    donateButton:SetScript("OnClick", function()
-        if DEFAULT_CHAT_FRAME then
-            DEFAULT_CHAT_FRAME:AddMessage("AutoQuestAccept donation link: " .. donateUrl)
-        end
-        donateBox:SetText(donateUrl)
-        donateBox:HighlightText()
-        donateBox:SetFocus()
+    local projectButton = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+    projectButton:SetWidth(80)
+    projectButton:SetHeight(20)
+    projectButton:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 24, 36)
+    projectButton:SetText("Project")
+    projectButton:SetScript("OnClick", function()
+        AQA_ShowLinkPopup("Project URL (copy):", repoUrl)
     end)
 
     local feedbackButton = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     feedbackButton:SetWidth(80)
     feedbackButton:SetHeight(20)
-    feedbackButton:SetPoint("LEFT", donateBox, "RIGHT", 8, 0)
+    feedbackButton:SetPoint("LEFT", projectButton, "RIGHT", 8, 0)
     feedbackButton:SetText("Feedback")
     feedbackButton:SetScript("OnClick", function()
-        if DEFAULT_CHAT_FRAME then
-            DEFAULT_CHAT_FRAME:AddMessage("AutoQuestAccept feedback: " .. feedbackUrl)
-        end
+        AQA_ShowLinkPopup("Issues URL (copy):", issuesUrl)
     end)
 
-    local supportText = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    supportText:SetPoint("TOPLEFT", statusText, "BOTTOMLEFT", 0, -4)
-    supportText:SetWidth(340)
-    supportText:SetJustifyH("LEFT")
-    supportText:SetText("If this QoL addon saves you time, consider donating.")
-
     local credit = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    credit:SetPoint("BOTTOM", f, "BOTTOM", 0, 16)
+    credit:SetPoint("BOTTOM", f, "BOTTOM", 0, 12)
     credit:SetText("Made by: Sebastian Van Hemelrijck")
 
     local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
@@ -208,6 +246,10 @@ SlashCmdList["AQA"] = function(msg)
         AQA_SetEnabled(true)
     elseif msg == "off" then
         AQA_SetEnabled(false)
+    elseif msg == "feedback" then
+        AQA_ShowLinkPopup("Issues URL (copy):", issuesUrl)
+    elseif msg == "project" then
+        AQA_ShowLinkPopup("Project URL (copy):", repoUrl)
     elseif msg == "ui" or msg == "" then
         AQA_ShowUI()
         AQA_PrintStatus()
