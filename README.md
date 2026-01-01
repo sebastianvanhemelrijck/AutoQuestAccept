@@ -48,7 +48,7 @@ This addon intentionally targets the Vanilla 1.12.1 API. Classic or retail addon
 
 Made by SVH. If you want to support development, you can donate at:
 
-https://paypal.me/SVH24
-https://ko-fi.com/sebastianvanh
+- https://paypal.me/SVH24
+- https://ko-fi.com/sebastianvanh
 
 Donation links are intentionally not shown inside the in-game UI; see this README instead.
