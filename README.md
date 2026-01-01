@@ -39,6 +39,7 @@ Then enable the addon in the in-game AddOns list and use `/reload`.
 
 ![AutoQuestAccept UI](docs/ui.png)
 
+
 ## Notes
 
 This addon intentionally targets the Vanilla 1.12.1 API. Classic or retail addons will not work.
